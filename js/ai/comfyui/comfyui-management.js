@@ -294,14 +294,19 @@ async function Comfyui_handle_process_queue(layer, spinnerId, Type = 'T2I') {
         createToastError("Generation Error", result.message);
         throw new Error(result.message);
       } else if (result) {
-        layer.visible = false;
-
+        // Disable history saving to prevent multiple entries
+        changeDoNotSaveHistory();
+        
         if(layer.clipPath){
           var center = calculateCenter(layer);
-          putImageInFrame(result, center.centerX, center.centerY);
+          putImageInFrame(result, center.centerX, center.centerY, false, false, true, true);
         }else{
           replaceImageObject(layer, result);
         }
+        
+        // Re-enable history saving and save a single entry
+        changeDoSaveHistory();
+        saveStateByManual();
       } else {
         throw new Error("Unexpected error: No result returned from Comfyui_put_queue");
       }

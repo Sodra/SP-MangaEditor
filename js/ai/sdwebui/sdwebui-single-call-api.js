@@ -1,4 +1,3 @@
-
 async function processQueue(layer, spinnerId, fetchFunction, imageName) {
   console.log(`Processing queue for ${imageName}`);
   try {
@@ -16,16 +15,30 @@ async function processQueue(layer, spinnerId, fetchFunction, imageName) {
 }
 
 async function handleSuccessfulGeneration(img, responseData, layer, imageName) {
+  // Temporarily disable history saving to prevent saving both image addition and layer visibility change
+  changeDoNotSaveHistory();
+  
   const webpImg = await img2webp(img);
   webpImg.name = imageName;
   setImage2ImageInitPrompt(webpImg);
+  
+  // Don't hide the original panel layer
+  
   const { centerX, centerY } = calculateCenter(layer);
-  putImageInFrame(webpImg, centerX, centerY);
+  
+  // Put the image in frame but without letting putImageInFrame save state
+  putImageInFrame(webpImg, centerX, centerY, false, false, true, true);
 
   const infoObject = JSON.parse(responseData.info);
-  layer.tempSeed = infoObject.seed;
+  if (layer) {
+    layer.tempSeed = infoObject.seed;
+  }
   webpImg.tempPrompt = infoObject.prompt;
   webpImg.tempNegative = infoObject.negative_prompt;
+  
+  // Re-enable history saving and save a single state for the entire operation
+  changeDoSaveHistory();
+  saveStateByManual();
 }
 
 const sdwebui_T2IProcessQueue = (layer, spinnerId) => processQueue(layer, spinnerId, sdwebui_fetchText2Image, "t2i");
@@ -116,14 +129,23 @@ async function handleSuccessfulRembg(responseData, layer) {
     responseData = 'data:image/png;base64,' + responseData;
   }
 
+  // Disable history saving to prevent multiple entries
+  changeDoNotSaveHistory();
+
   return new Promise((resolve, reject) => {
     fabric.Image.fromURL(responseData, (img) => {
       if (img) {
         const { centerX, centerY } = calculateCenter(layer);
-        putImageInFrame(img, centerX, centerY);
+        putImageInFrame(img, centerX, centerY, false, false, true, true);
         resolve(img);
-        visibleChange(layer);
+        
+        // Don't hide the original layer
+        
+        // Re-enable history saving and save a single entry
+        changeDoSaveHistory();
+        saveStateByManual();
       } else {
+        changeDoSaveHistory(); // Make sure to re-enable even on error
         reject(new Error('Failed to create a fabric.Image object from rembg result'));
       }
     }, { crossOrigin: 'anonymous' });

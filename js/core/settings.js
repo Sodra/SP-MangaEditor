@@ -110,7 +110,27 @@ let jscolorOptions = {
 
 document.addEventListener('DOMContentLoaded', function() {
   jsColorSet();
+  
+  // Initialize AI Settings with default values from basePrompt
+  initializeAISettings();
 });
+
+function initializeAISettings() {
+  // Set default values for AI settings fields using the basePrompt object
+  if ($('basePrompt_prompt')) $('basePrompt_prompt').value = basePrompt.text2img_prompt;
+  if ($('basePrompt_negative')) $('basePrompt_negative').value = basePrompt.text2img_negative;
+  if ($('basePrompt_seed')) $('basePrompt_seed').value = basePrompt.text2img_seed;
+  if ($('basePrompt_cfg_scale')) $('basePrompt_cfg_scale').value = basePrompt.text2img_cfg_scale;
+  if ($('basePrompt_width')) $('basePrompt_width').value = basePrompt.text2img_width;
+  if ($('basePrompt_height')) $('basePrompt_height').value = basePrompt.text2img_height;
+  if ($('basePrompt_samplingMethod')) $('basePrompt_samplingMethod').value = basePrompt.text2img_samplingMethod;
+  if ($('basePrompt_samplingSteps')) $('basePrompt_samplingSteps').value = basePrompt.text2img_samplingSteps;
+  if ($('basePrompt_model')) $('basePrompt_model').value = basePrompt.text2img_model;
+  if ($('text2img_hr_upscaler')) $('text2img_hr_upscaler').value = basePrompt.text2img_hr_upscaler;
+  if ($('text2img_hr_scale')) $('text2img_hr_scale').value = basePrompt.text2img_hr_scale;
+  if ($('text2img_hr_step')) $('text2img_hr_step').value = basePrompt.text2img_hr_step;
+  if ($('text2img_hr_denoise')) $('text2img_hr_denoise').value = basePrompt.text2img_hr_denoise;
+}
 
 function jsColorSet(){
   const colorPickers = document.querySelectorAll('.jscolor-color-picker');

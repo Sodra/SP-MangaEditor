@@ -112,20 +112,20 @@ function replaceImageObject(oldImageObject, newImageObject){
 }
 
 
-function putImageInFrame(imgOrSvg, x, y, isNotActive=false, notReplace=false, isFit=true) {
+function putImageInFrame(imgOrSvg, x, y, isNotActive=false, notReplace=false, isFit=true, skipSaveState=false) {
   let obj;
   
   if (typeof imgOrSvg === 'string' && imgOrSvg.startsWith('<svg')) {
     fabric.loadSVGFromString(imgOrSvg, function(objects, options) {
       obj = fabric.util.groupSVGElements(objects, options);
-      placeObject(obj, x, y, isNotActive, true, isFit);
+      placeObject(obj, x, y, isNotActive, true, isFit, skipSaveState);
     });
   } else {
     obj = imgOrSvg;
-    placeObject(obj, x, y, isNotActive, notReplace, isFit);
+    placeObject(obj, x, y, isNotActive, notReplace, isFit, skipSaveState);
   }
 
-  function placeObject(obj, x, y, isNotActive, notReplace, isFit) {
+  function placeObject(obj, x, y, isNotActive, notReplace, isFit, skipSaveState) {
     if(isFit){
       obj.set({ left: x, top: y });
     }
@@ -186,7 +186,12 @@ function putImageInFrame(imgOrSvg, x, y, isNotActive=false, notReplace=false, is
 
     canvas.renderAll();
     updateLayerPanel();
-    saveStateByManual();
+    
+    // Only save state if not instructed to skip
+    if (!skipSaveState) {
+      saveStateByManual();
+    }
+    
     return obj;
   }
 
