@@ -62,6 +62,7 @@ function getDiffusionInfomation() {
       fetchSD_Models();
       fetchSD_Sampler();
       fetchSD_Upscaler();
+      fetchSD_LatentUpscaler();
       fetchSD_ADModels();
       fetchSD_Modules();  
     });
@@ -103,7 +104,51 @@ console.log("apiHeartbeat");
 
 function updateUpscalerDropdown(models) {
   const modelDropdown = $('text2img_hr_upscaler');
-  modelDropdown.innerHTML = '';
+  
+  // Store the regular upscaler models
+  window.regularUpscalerModels = models;
+  
+  // If we already have latent models, combine them
+  if (window.latentUpscalerModels) {
+    combineAndUpdateUpscalerDropdown();
+  } else {
+    // Otherwise just update with regular models for now
+    updateDropdownWithModels(modelDropdown, models);
+  }
+}
+
+function updateLatentUpscalerDropdown(models) {
+  // Store the latent upscaler models
+  window.latentUpscalerModels = models;
+  
+  // If we already have regular models, combine them
+  if (window.regularUpscalerModels) {
+    combineAndUpdateUpscalerDropdown();
+  }
+}
+
+function combineAndUpdateUpscalerDropdown() {
+  const modelDropdown = $('text2img_hr_upscaler');
+  
+  // Create combined list of models
+  const combinedModels = [...window.regularUpscalerModels];
+  
+  // Add latent upscalers with a prefix to distinguish them
+  window.latentUpscalerModels.forEach(model => {
+    combinedModels.push({
+      name: model.name,
+      model_name: "LATENT",
+      model_path: null,
+      scale: 4.0
+    });
+  });
+  
+  // Update the dropdown with combined models
+  updateDropdownWithModels(modelDropdown, combinedModels);
+}
+
+function updateDropdownWithModels(dropdown, models) {
+  dropdown.innerHTML = '';
   models.forEach(model => {
     const option = document.createElement('option');
     option.value = model.name;
@@ -112,7 +157,7 @@ function updateUpscalerDropdown(models) {
     if (basePrompt.text2img_hr_upscaler === model.name) {
       option.selected = true;
     }
-    modelDropdown.appendChild(option);
+    dropdown.appendChild(option);
   });
 }
 

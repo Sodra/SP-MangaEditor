@@ -1,4 +1,3 @@
-
 function fetchSD_ADModels() {
   fetch(sdWebUIUrls.adetilerModel, {
       method: 'GET',
@@ -101,6 +100,12 @@ async function fetchSD_Upscaler() {
   const response = await fetch(sdWebUIUrls.upscaler, { method: 'GET' });
   const models = await response.json();
   updateUpscalerDropdown(models);
+}
+
+async function fetchSD_LatentUpscaler() {
+  const response = await fetch(sdWebUIUrls.latentUpscaler, { method: 'GET' });
+  const models = await response.json();
+  updateLatentUpscalerDropdown(models);
 }
 
 async function fetchSD_Models() {

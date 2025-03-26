@@ -29,6 +29,7 @@ class SDWebUIEndpoints {
       sampler: '/sdapi/v1/samplers',
       scheduler: '/sdapi/v1/schedulers',
       upscaler: '/sdapi/v1/upscalers',
+      latentUpscaler: '/sdapi/v1/latent-upscale-modes',
       sdModel: '/sdapi/v1/sd-models',
       t2i: '/sdapi/v1/txt2img',
       i2i: '/sdapi/v1/img2img',
@@ -140,7 +141,17 @@ function baseRequestData(layer) {
       hr_scale: basePrompt.text2img_hr_scale,
       hr_second_pass_steps: basePrompt.text2img_hr_step,
       denoising_strength: basePrompt.text2img_hr_denoise,
+      hr_additional_modules: ['Use same choices']
     });
+    
+    // Check if this is a latent upscaler from the window.latentUpscalerModels list
+    if (window.latentUpscalerModels && 
+        window.latentUpscalerModels.some(model => model.name === basePrompt.text2img_hr_upscaler)) {
+      // For latent upscalers, use latent upscale mode instead of hr_upscaler
+      requestData.hr_upscaler = "Latent";
+      requestData.latent_upscaler = basePrompt.text2img_hr_upscaler;
+      console.log("Using latent upscaler:", basePrompt.text2img_hr_upscaler);
+    }
   }
 
   // console.log("requestData", JSON.stringify(requestData));
