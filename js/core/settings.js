@@ -13,18 +13,16 @@ var canvas = new fabric.Canvas("mangaImageCanvas", {
   imageSmoothingEnabled: true,
   skipOffscreen: true,
   renderer: fabric.isWebglSupported ? "webgl" : "canvas",
+  backgroundColor: "rgba(0,0,0,0)"
 });
 document.addEventListener("DOMContentLoaded", function() {
   loadBookSize(210, 297, false);
   canvas.renderAll();
 });
 
-// const mode = localStorage.getItem('mode') || 'dark-mode';
-// if (mode === 'dark-mode') {
-  canvas.backgroundColor = "gray";
-// }else{
-//   canvas.backgroundColor = "white";
-// }
+// Make canvas transparent on startup so users start with a blank state
+// This allows them to select a template without having a white page first
+// canvas.backgroundColor = "rgba(0,0,0,0)";
 
 var svgPagging = 20;
 document.addEventListener('DOMContentLoaded', function() {

@@ -861,7 +861,9 @@ function getLastObject(){
 
 let initMessageText=null;
 function initMessage(){
-  // const message = "Drop or Generate";
+  // Don't show the initial message - we want a completely blank canvas
+  // Only uncomment this if we need to restore the message later
+  /*
   const message = getText("canvasInitMessage");
   const text = new fabric.IText(message, {
       left: canvas.width / 2,
@@ -879,6 +881,8 @@ function initMessage(){
   canvas.add(text);
   initMessageText = text;
   canvas.renderAll();
+  */
+  console.log("Initial message skipped for cleaner startup");
 }
 
 function isSpeechBubbleSVG(obj){

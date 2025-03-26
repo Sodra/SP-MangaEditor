@@ -1,10 +1,71 @@
+// Add a global variable to track if the current template has been modified
+let currentTemplateModified = false;
+
+// This function will be called when any modification is made to the canvas
+function markTemplateAsModified() {
+  console.log("Template marked as modified");
+  currentTemplateModified = true;
+}
+
+// Reset the modification flag when loading a new template
+function resetTemplateModification() {
+  console.log("Template modification flag reset");
+  currentTemplateModified = false;
+}
 
 async function loadBookSize(width, height, addPanel, newPage=false) {
+  console.log("loadBookSize called with:", { width, height, addPanel, newPage, stateStackLength: stateStack.length, currentTemplateModified });
+  
   const loading = OP_showLoading({
     icon: 'process',step: 'Step1',substep: 'Next Project',progress: 0
   });
-  try{
+  
+  try {
+    // Check if this is the initial canvas creation on startup
+    // Use multiple conditions to catch all initialization cases
+    const isInitialCreation = newPage === false && (stateStack.length <= 0 || btmGetGuids().length === 0);
+    console.log("isInitialCreation:", isInitialCreation, "newPage:", newPage, "guidsLength:", btmGetGuids().length);
+    
+    // Skip the entire process for the initial canvas creation
+    // This prevents adding a blank page to the timeline on startup
+    if (isInitialCreation) {
+      console.log("Initial startup or reset: Skipping timeline addition");
+      
+      changeDoNotSaveHistory();
+      resizeCanvasToObject(width, height);
+      
+      if (addPanel) {
+        addSquareBySize(width, height);
+      } else {
+        initImageHistory();
+        saveState();
+      }
+      
+      changeDoSaveHistory();
+      return;
+    }
+    
+    // Generate a GUID for this template
+    const newGuid = generateGUID();
+    console.log("Generated new GUID:", newGuid);
+
+    // Check if we should replace the existing template rather than add a new one
+    // We replace if there's an existing template in the timeline that hasn't been modified
+    const existingGuids = btmGetGuids();
+    const shouldReplaceExisting = !isInitialCreation && existingGuids.length > 0 && !currentTemplateModified;
+    
+    console.log("Should replace existing template:", shouldReplaceExisting);
+    
+    // If replacing, store the existing GUID
+    let existingGuid = null;
+    if (shouldReplaceExisting) {
+      // Get the most recent GUID to replace
+      existingGuid = getCanvasGUID();
+      console.log("Will replace template with GUID:", existingGuid);
+    }
+    
     if (stateStack.length > 2 || newPage) {
+      console.log("Path 1: Existing canvas or new page");
       OP_updateLoadingState(loading, {
         icon: 'process',step: 'Step2',substep: 'Zip Start',progress: 40
       });
@@ -12,35 +73,137 @@ async function loadBookSize(width, height, addPanel, newPage=false) {
       await btmSaveProjectFile().then(() => {
         setCanvasGUID();
       });
+      
       OP_updateLoadingState(loading, {
         icon: 'process',step: 'Step2',substep: 'Next Project End',progress: 90
       });
   
       changeDoNotSaveHistory();
       resizeCanvasToObject(width, height);
+      
       if (addPanel) {
         addSquareBySize(width, height);
       } else {
         initImageHistory();
         saveState();
       }
+      
       changeDoSaveHistory();
+      
+      // New code for Path 1: Add template to timeline if it's not the initial creation
+      if (!isInitialCreation && addPanel) {
+        console.log("Adding template to bottom bar from Path 1...");
+        try {
+          // Set the canvas GUID to our newly generated GUID
+          setCanvasGUID(newGuid);
+          console.log("Path 1: Canvas GUID set to:", getCanvasGUID());
+          
+          // Immediately save this new canvas to the timeline
+          const previewLink = getCropAndDownloadLinkByMultiplier(1, "jpeg");
+          if (!previewLink || !previewLink.href) {
+            console.error("Path 1: Failed to generate preview link");
+          }
+          
+          const guid = getCanvasGUID();
+          console.log("Path 1: Using GUID for timeline:", guid);
+          
+          const lz4Blob = await generateBlobProjectFile(guid);
+          if (!lz4Blob) {
+            console.error("Path 1: Failed to generate blob file");
+          }
+          
+          console.log("Path 1: About to call btmAddImage with:", 
+            { guidExists: !!guid, linkExists: !!previewLink, blobExists: !!lz4Blob });
+          
+          setTimeout(() => {
+            if (shouldReplaceExisting && existingGuid) {
+              // Delete the existing template and add the new one
+              btmProjectsMap.delete(existingGuid);
+              btmAddImage(previewLink, lz4Blob, guid);
+              console.log("Path 1: Replaced existing template in timeline");
+            } else {
+              btmAddImage(previewLink, lz4Blob, guid);
+              console.log("Path 1: Added to bottom bar successfully");
+            }
+            // Reset the modification flag for the new template
+            resetTemplateModification();
+          }, 0);
+        } catch (error) {
+          console.error("Path 1: Error adding template to bottom bar:", error);
+        }
+      }
     } else {
+      console.log("Path 2: New template selected");
+      
       changeDoNotSaveHistory();
       resizeCanvasToObject(width, height);
+      
       if (addPanel) {
         addSquareBySize(width, height);
       } else {
         initImageHistory();
         saveState();
       }
+      
       changeDoSaveHistory();
-      setCanvasGUID();
+      
+      // Set the canvas GUID to our newly generated GUID
+      setCanvasGUID(newGuid);
+      console.log("Path 2: Canvas GUID set to:", getCanvasGUID());
+      
+      // Don't add to timeline if this is the initial canvas creation on startup
+      if (!isInitialCreation) {
+        console.log("Path 2: Adding template to bottom bar for template selection...");
+        try {
+          // Immediately save this new canvas to the timeline
+          const previewLink = getCropAndDownloadLinkByMultiplier(1, "jpeg");
+          if (!previewLink || !previewLink.href) {
+            console.error("Path 2: Failed to generate preview link");
+          }
+          
+          const guid = getCanvasGUID();
+          console.log("Path 2: Using GUID for timeline:", guid);
+          
+          const lz4Blob = await generateBlobProjectFile(guid);
+          if (!lz4Blob) {
+            console.error("Path 2: Failed to generate blob file");
+          }
+          
+          console.log("Path 2: About to call btmAddImage with:", 
+            { guidExists: !!guid, linkExists: !!previewLink, blobExists: !!lz4Blob });
+          
+          // Use a setTimeout to ensure DOM operations have completed
+          setTimeout(() => {
+            if (shouldReplaceExisting && existingGuid) {
+              // Delete the existing template and add the new one
+              btmProjectsMap.delete(existingGuid);
+              
+              // Remove the template from the UI
+              const imageElement = document.querySelector(`.btm-image[data-index="${existingGuid}"]`);
+              if (imageElement && imageElement.parentElement) {
+                imageElement.parentElement.remove();
+              }
+              
+              btmAddImage(previewLink, lz4Blob, guid);
+              updateAllPageNumbers();
+              console.log("Path 2: Replaced existing template in timeline");
+            } else {
+              btmAddImage(previewLink, lz4Blob, guid);
+              console.log("Path 2: Added to bottom bar successfully after template selection");
+            }
+            // Reset the modification flag for the new template
+            resetTemplateModification();
+          }, 0);
+        } catch (error) {
+          console.error("Path 2: Error adding template to bottom bar:", error);
+        }
+      } else {
+        console.log("Path 2: Skipping adding to bottom bar (initial creation)");
+      }
     }
-  }finally{
+  } finally {
     OP_hideLoading(loading);
   }
-
 }
 
 function addSquareBySize(width, height) {
@@ -103,25 +266,28 @@ document.addEventListener('DOMContentLoaded', function () {
   $("CustomPanelButton").addEventListener("click", function () {
     var x = $("customPanelSizeX").value;
     var y = $("customPanelSizeY").value;
-    loadBookSize(x, y, false);
+    loadBookSize(x, y, false, false);
     canvas.renderAll();
     adjustCanvasSize();
   });
-  $on($("A4-H"),"click",()=>loadBookSize(210,297,true));
-  $on($("A4-V"),"click",()=>loadBookSize(297,210,true));
-  $on($("B4-H"),"click",()=>loadBookSize(257,364,true));
-  $on($("B4-V"),"click",()=>loadBookSize(364,257,true));
-  $on($("insta"),"click",()=>loadBookSize(1080,1080,true));
-  $on($("insta-story"),"click",()=>loadBookSize(1080,1920,true));
-  $on($("insta-portrait"),"click",()=>loadBookSize(1080,1350,true));
-  $on($("fb-page-cover"),"click",()=>loadBookSize(1640,664,true));
-  $on($("fb-event"),"click",()=>loadBookSize(1920,1080,true));
-  $on($("fb-group-header"),"click",()=>loadBookSize(1640,856,true));
-  $on($("youtube-thumbnail"),"click",()=>loadBookSize(1280,720,true));
-  $on($("youtube-profile"),"click",()=>loadBookSize(800,800,true));
-  $on($("youtube-cover"),"click",()=>loadBookSize(2560,1440,true));
-  $on($("twitter-profile"),"click",()=>loadBookSize(400,400,true));
-  $on($("twitter-header"),"click",()=>loadBookSize(1500,500,true));
+  
+  // Update all template buttons to explicitly pass false for newPage parameter
+  // to ensure they're not treated as initial creation
+  $on($("A4-H"),"click",()=>loadBookSize(210, 297, true, false));
+  $on($("A4-V"),"click",()=>loadBookSize(297, 210, true, false));
+  $on($("B4-H"),"click",()=>loadBookSize(257, 364, true, false));
+  $on($("B4-V"),"click",()=>loadBookSize(364, 257, true, false));
+  $on($("insta"),"click",()=>loadBookSize(1080, 1080, true, false));
+  $on($("insta-story"),"click",()=>loadBookSize(1080, 1920, true, false));
+  $on($("insta-portrait"),"click",()=>loadBookSize(1080, 1350, true, false));
+  $on($("fb-page-cover"),"click",()=>loadBookSize(1640, 664, true, false));
+  $on($("fb-event"),"click",()=>loadBookSize(1920, 1080, true, false));
+  $on($("fb-group-header"),"click",()=>loadBookSize(1640, 856, true, false));
+  $on($("youtube-thumbnail"),"click",()=>loadBookSize(1280, 720, true, false));
+  $on($("youtube-profile"),"click",()=>loadBookSize(800, 800, true, false));
+  $on($("youtube-cover"),"click",()=>loadBookSize(2560, 1440, true, false));
+  $on($("twitter-profile"),"click",()=>loadBookSize(400, 400, true, false));
+  $on($("twitter-header"),"click",()=>loadBookSize(1500, 500, true, false));
 });
 
 

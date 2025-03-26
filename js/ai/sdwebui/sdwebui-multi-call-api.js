@@ -1,3 +1,4 @@
+
 function fetchSD_ADModels() {
   fetch(sdWebUIUrls.adetilerModel, {
       method: 'GET',
@@ -97,31 +98,9 @@ async function fetchSD_Sampler() {
 }
 
 async function fetchSD_Upscaler() {
-  try {
-    // Fetch regular upscalers
-    const upscalerResponse = await fetch(sdWebUIUrls.upscaler, { method: 'GET' });
-    const upscalers = await upscalerResponse.json();
-    
-    // Fetch latent upscale modes
-    const latentResponse = await fetch(sdWebUIUrls.latentUpscaleModes, { method: 'GET' });
-    const latentModes = await latentResponse.json();
-    
-    // Combine both lists
-    const allUpscalers = [
-      ...upscalers,
-      ...latentModes.map(mode => ({
-        name: mode.name,
-        model_name: null,
-        model_path: null,
-        model_url: null,
-        scale: 4.0
-      }))
-    ];
-    
-    updateUpscalerDropdown(allUpscalers);
-  } catch (error) {
-    console.error("Error fetching upscalers:", error);
-  }
+  const response = await fetch(sdWebUIUrls.upscaler, { method: 'GET' });
+  const models = await response.json();
+  updateUpscalerDropdown(models);
 }
 
 async function fetchSD_Models() {

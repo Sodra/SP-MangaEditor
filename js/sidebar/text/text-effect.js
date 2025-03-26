@@ -215,11 +215,23 @@ function createTextbox() {
   textbox.on('text:changed', function () {
     textbox.set({ fontFamily: selectedFont });
     canvas.requestRenderAll();
+    
+    // Mark template as modified when text is changed
+    if (typeof markTemplateAsModified === 'function') {
+      console.log("Marking template as modified after text change");
+      markTemplateAsModified();
+    }
   });
 
   canvas.add(textbox);
   canvas.setActiveObject(textbox);
   canvas.requestRenderAll();
+  
+  // Mark template as modified when text is added
+  if (typeof markTemplateAsModified === 'function') {
+    console.log("Marking template as modified after adding text");
+    markTemplateAsModified();
+  }
   // updateLayerPanel();
 }
 

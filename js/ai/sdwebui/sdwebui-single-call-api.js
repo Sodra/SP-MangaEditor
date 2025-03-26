@@ -36,6 +36,12 @@ async function handleSuccessfulGeneration(img, responseData, layer, imageName) {
   webpImg.tempPrompt = infoObject.prompt;
   webpImg.tempNegative = infoObject.negative_prompt;
   
+  // Mark the template as modified when an image is generated
+  if (typeof markTemplateAsModified === 'function') {
+    console.log("Marking template as modified after successful image generation");
+    markTemplateAsModified();
+  }
+  
   // Re-enable history saving and save a single state for the entire operation
   changeDoSaveHistory();
   saveStateByManual();

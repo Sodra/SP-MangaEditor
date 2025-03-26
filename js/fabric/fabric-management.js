@@ -24,6 +24,15 @@ canvas.on("object:added", (e) => {
   }
   forcedAdjustCanvasSize();
 
+  // Mark template as modified when user adds objects
+  // Don't mark as modified for initial template creation or system operations
+  if (typeof markTemplateAsModified === 'function' && 
+      !obj.isInitializing && 
+      stateStack.length > 1) {
+    console.log("Marking template as modified due to object added:", obj);
+    markTemplateAsModified();
+  }
+
   if( currentMode === 'freehand' ){
     changeObjectCursor('freehand', obj)
   }else if( currentMode === 'point' ){
@@ -40,6 +49,12 @@ canvas.on("object:modified", (e) => {
   logger.trace('5: object:modified');
   const obj = e.target;
   saveInitialState(obj);
+  
+  // Mark template as modified when objects are modified
+  if (typeof markTemplateAsModified === 'function') {
+    console.log("Marking template as modified due to object modified:", obj);
+    markTemplateAsModified();
+  }
 });
 
 
@@ -319,6 +334,12 @@ canvas.on('path:created', function (opt) {
   logger.trace('23: path:created');
   console.log("push");
   currentPaths.push(opt.path);
+  
+  // Mark template as modified when a path is drawn
+  if (typeof markTemplateAsModified === 'function') {
+    console.log("Marking template as modified after drawing path");
+    markTemplateAsModified();
+  }
 });
 
 document.addEventListener('DOMContentLoaded', function () {

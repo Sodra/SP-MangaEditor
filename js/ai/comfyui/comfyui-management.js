@@ -294,19 +294,20 @@ async function Comfyui_handle_process_queue(layer, spinnerId, Type = 'T2I') {
         createToastError("Generation Error", result.message);
         throw new Error(result.message);
       } else if (result) {
-        // Disable history saving to prevent multiple entries
-        changeDoNotSaveHistory();
-        
+        layer.visible = false;
+
         if(layer.clipPath){
           var center = calculateCenter(layer);
-          putImageInFrame(result, center.centerX, center.centerY, false, false, true, true);
+          putImageInFrame(result, center.centerX, center.centerY);
         }else{
           replaceImageObject(layer, result);
         }
         
-        // Re-enable history saving and save a single entry
-        changeDoSaveHistory();
-        saveStateByManual();
+        // Mark the template as modified when an image is generated
+        if (typeof markTemplateAsModified === 'function') {
+          console.log("Marking template as modified after successful ComfyUI image generation");
+          markTemplateAsModified();
+        }
       } else {
         throw new Error("Unexpected error: No result returned from Comfyui_put_queue");
       }

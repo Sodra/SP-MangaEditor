@@ -10,6 +10,22 @@ const btmScrollRightBtn = $("btm-scroll-right");
 let btmScrollPosition = 0;
 let btmIsDragging = false;
 
+// Function to clear all images from the timeline
+// This will be called during initialization to ensure a clean start
+function btmClearTimeline() {
+  console.log("Clearing timeline");
+  btmProjectsMap.clear();
+  while (btmImageContainer.firstChild) {
+    btmImageContainer.removeChild(btmImageContainer.firstChild);
+  }
+  btmCloseDrawer();
+}
+
+// Initialize the timeline on page load
+document.addEventListener('DOMContentLoaded', function() {
+  btmClearTimeline();
+});
+
 function btmToggleDrawer() {
   btmDrawer.classList.toggle("btm-closed");
   btmUpdateHandleText();
@@ -27,9 +43,27 @@ function btmUpdateHandleText() {
 
 
 function btmAddImage(imageLink, blob, guid) {
+  console.log("btmAddImage called with GUID:", guid);
+  
+  if (!guid) {
+    console.error("No GUID provided to btmAddImage");
+    return;
+  }
+  
+  if (!imageLink || !imageLink.href) {
+    console.error("No valid imageLink provided to btmAddImage");
+    return;
+  }
+  
+  if (!blob) {
+    console.error("No blob provided to btmAddImage");
+    return;
+  }
+
   const projectData = btmProjectsMap.get(guid);
 
   if (projectData) {
+    console.log("Updating existing image in timeline for GUID:", guid);
     btmProjectsMap.set(guid, { imageLink, blob });
     const image = document.querySelector(`.btm-image[data-index="${guid}"]`);
     if (image) {
@@ -40,6 +74,7 @@ function btmAddImage(imageLink, blob, guid) {
       }
     }
   } else {
+    console.log("Adding new image to timeline for GUID:", guid);
     const imageWrapper = document.createElement("div");
     imageWrapper.className = "btm-image-wrapper";
 
@@ -110,11 +145,14 @@ function btmAddImage(imageLink, blob, guid) {
     imageWrapper.appendChild(deleteBtn);
     btmImageContainer.appendChild(imageWrapper);
     btmProjectsMap.set(guid, { imageLink, blob });
+    console.log("Added image to timeline, current size:", btmGetGuidsSize());
   }
 
   if (btmDrawer.classList.contains("btm-closed")) {
+    console.log("Opening bottom drawer");
     btmToggleDrawer();
   } else {
+    console.log("Updating scroll buttons");
     btmUpdateScrollButtons();
   }
 }

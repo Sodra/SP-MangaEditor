@@ -180,25 +180,74 @@ window.onload = function () {
         img.classList.add("svg-preview");
         img.alt = item.name;
         img.addEventListener("click", async function () {
-            console.log("new panel");
+            console.log("new vertical panel selected");
 
             const loading = OP_showLoading({
                 icon: 'process',step: 'Step1',substep: 'New Page',progress: 0
               });
             try{
+                // Generate new GUID regardless of path
+                const newGuid = generateGUID();
+                console.log("Generated new GUID for vertical template:", newGuid);
+                
+                // Check if we should replace the existing template rather than add a new one
+                const existingGuids = btmGetGuids();
+                const shouldReplaceExisting = existingGuids.length > 0 && !currentTemplateModified;
+                
+                console.log("Should replace existing template:", shouldReplaceExisting);
+                
+                // If replacing, store the existing GUID
+                let existingGuid = null;
+                if (shouldReplaceExisting) {
+                    // Get the most recent GUID to replace
+                    existingGuid = getCanvasGUID();
+                    console.log("Will replace template with GUID:", existingGuid);
+                }
+                
                 if (stateStack.length > 2) {
                     OP_updateLoadingState(loading, {
                         icon: 'process',step: 'Step2',substep: 'Zip Start',progress: 20
                       });
 
                       await btmSaveProjectFile().then(() => {
-                        setCanvasGUID();
+                        // Use our new GUID
+                        setCanvasGUID(newGuid);
                         loadSVGPlusReset(item.svg);
-                    });
+                      });
                 } else {
-                    setCanvasGUID();
+                    // Use our new GUID
+                    setCanvasGUID(newGuid);
                     loadSVGPlusReset(item.svg);
-                }    
+                }
+                
+                // Always add template to timeline, regardless of path
+                console.log("Adding vertical template to timeline, always");
+                const previewLink = getCropAndDownloadLinkByMultiplier(1, "jpeg");
+                const guid = getCanvasGUID();
+                console.log("Vertical template GUID:", guid);
+                
+                const lz4Blob = await generateBlobProjectFile(guid);
+                setTimeout(() => {
+                    if (shouldReplaceExisting && existingGuid) {
+                        // Delete the existing template and add the new one
+                        btmProjectsMap.delete(existingGuid);
+                        
+                        // Remove the template from the UI
+                        const imageElement = document.querySelector(`.btm-image[data-index="${existingGuid}"]`);
+                        if (imageElement && imageElement.parentElement) {
+                            imageElement.parentElement.remove();
+                        }
+                        
+                        btmAddImage(previewLink, lz4Blob, guid);
+                        updateAllPageNumbers();
+                        console.log("Replaced existing template in timeline");
+                    } else {
+                        btmAddImage(previewLink, lz4Blob, guid);
+                        console.log("Added vertical template to timeline");
+                    }
+                    // Reset the modification flag for the new template
+                    resetTemplateModification();
+                }, 0);
             }finally{
                 OP_hideLoading(loading);
             }
@@ -214,27 +263,75 @@ window.onload = function () {
         img.classList.add("svg-preview");
         img.alt = item.name;
         img.addEventListener("click", async function () {
-            console.log("new panel");
+            console.log("new landscape panel selected");
             const loading = OP_showLoading({
                 icon: 'process',step: 'Step1',substep: 'New Page',progress: 0
               });
             try{
+                // Generate new GUID regardless of path
+                const newGuid = generateGUID();
+                console.log("Generated new GUID for landscape template:", newGuid);
+                
+                // Check if we should replace the existing template rather than add a new one
+                const existingGuids = btmGetGuids();
+                const shouldReplaceExisting = existingGuids.length > 0 && !currentTemplateModified;
+                
+                console.log("Should replace existing template:", shouldReplaceExisting);
+                
+                // If replacing, store the existing GUID
+                let existingGuid = null;
+                if (shouldReplaceExisting) {
+                    // Get the most recent GUID to replace
+                    existingGuid = getCanvasGUID();
+                    console.log("Will replace template with GUID:", existingGuid);
+                }
+                
                 if (stateStack.length > 2) {
                     OP_updateLoadingState(loading, {
                         icon: 'process',step: 'Step2',substep: 'Zip Start',progress: 20
                       });
                       await btmSaveProjectFile().then(() => {
-                        setCanvasGUID();
+                        // Use our new GUID
+                        setCanvasGUID(newGuid);
                         loadSVGPlusReset(item.svg, true);
                     });
                 } else {
-                    setCanvasGUID();
+                    // Use our new GUID
+                    setCanvasGUID(newGuid);
                     loadSVGPlusReset(item.svg, true);
                 }
+                
+                // Always add template to timeline, regardless of path
+                console.log("Adding landscape template to timeline, always");
+                const previewLink = getCropAndDownloadLinkByMultiplier(1, "jpeg");
+                const guid = getCanvasGUID();
+                console.log("Landscape template GUID:", guid);
+                
+                const lz4Blob = await generateBlobProjectFile(guid);
+                setTimeout(() => {
+                    if (shouldReplaceExisting && existingGuid) {
+                        // Delete the existing template and add the new one
+                        btmProjectsMap.delete(existingGuid);
+                        
+                        // Remove the template from the UI
+                        const imageElement = document.querySelector(`.btm-image[data-index="${existingGuid}"]`);
+                        if (imageElement && imageElement.parentElement) {
+                            imageElement.parentElement.remove();
+                        }
+                        
+                        btmAddImage(previewLink, lz4Blob, guid);
+                        updateAllPageNumbers();
+                        console.log("Replaced existing template in timeline");
+                    } else {
+                        btmAddImage(previewLink, lz4Blob, guid);
+                        console.log("Added landscape template to timeline");
+                    }
+                    // Reset the modification flag for the new template
+                    resetTemplateModification();
+                }, 0);
             }finally{
                 OP_hideLoading(loading);
             }
-
         });
         previewAreaLandscape.appendChild(img);
     });
