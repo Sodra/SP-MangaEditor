@@ -153,8 +153,8 @@ function putImageInFrame(imgOrSvg, x, y, isNotActive=false, notReplace=false, is
         obj.set({
           left: frameCenterX - (obj.width * scaleToFit) / 2,
           top: frameCenterY - (obj.height * scaleToFit) / 2,
-          scaleX: scaleToFit * 1.05,
-          scaleY: scaleToFit * 1.05,
+          scaleX: scaleToFit,
+          scaleY: scaleToFit,
         });
       }
       if (obj.name) {
