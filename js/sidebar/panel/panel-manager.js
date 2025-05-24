@@ -209,6 +209,7 @@ function putImageInFrame(imgOrSvg, x, y, isNotActive=false, notReplace=false, is
     if (!skipSaveState) {
       saveStateByManual();
     }
+    enforceLayerOrder(); // Ensure canvas stacking matches layer panel
     
     return obj;
   }

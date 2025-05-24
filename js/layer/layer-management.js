@@ -369,6 +369,46 @@ function getLayerIndexByActiveObject(targetObject) {
   return result;
  }
 
+// Function to enforce the visual layer order onto the canvas stacking order
+function enforceLayerOrder() {
+  if (!canvas || finalLayerOrder.length === 0) {
+    // console.log("enforceLayerOrder: Canvas not ready or finalLayerOrder is empty.");
+    return;
+  }
+
+  const canvasObjects = canvas.getObjects();
+  const totalObjectsOnCanvas = canvasObjects.length;
+  let operationsPerformed = 0;
+
+  // Iterate through finalLayerOrder (which is top-to-bottom visually)
+  // The object at finalLayerOrder[0] should be at the highest canvas index.
+  finalLayerOrder.forEach((itemInFinalOrder, indexInFinalOrder) => {
+    const fabricObject = itemInFinalOrder.layer;
+    // Desired canvas index: top item in finalLayerOrder -> highest index on canvas
+    const desiredCanvasIndex = totalObjectsOnCanvas - 1 - indexInFinalOrder;
+
+    // Current actual index of the object on the canvas
+    const currentCanvasIndex = canvasObjects.indexOf(fabricObject);
+
+    if (currentCanvasIndex !== -1 && currentCanvasIndex !== desiredCanvasIndex) {
+      // console.log(`Moving '${fabricObject.name || fabricObject.type}' from canvas index ${currentCanvasIndex} to ${desiredCanvasIndex}`);
+      fabricObject.moveTo(desiredCanvasIndex);
+      operationsPerformed++;
+    } else if (currentCanvasIndex === -1) {
+      // This shouldn't happen if finalLayerOrder is correctly derived from current canvas objects
+      // and no objects are removed between updateLayerPanel and this function.
+      // console.warn("enforceLayerOrder: Object from finalLayerOrder not found on canvas:", fabricObject);
+    }
+  });
+
+  if (operationsPerformed > 0) {
+    // console.log(`enforceLayerOrder: ${operationsPerformed} objects moved. Rendering canvas.`);
+    canvas.renderAll();
+  } else {
+    // console.log("enforceLayerOrder: Layer order already consistent. No canvas render needed.");
+  }
+}
+
 function LayersUp() {
   var activeObject = canvas.getActiveObject();
   if (activeObject) {

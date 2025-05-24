@@ -13,7 +13,8 @@ var canvas = new fabric.Canvas("mangaImageCanvas", {
   imageSmoothingEnabled: true,
   skipOffscreen: true,
   renderer: fabric.isWebglSupported ? "webgl" : "canvas",
-  backgroundColor: "rgba(0,0,0,0)"
+  backgroundColor: "rgba(0,0,0,0)",
+  preserveObjectStacking: true
 });
 document.addEventListener("DOMContentLoaded", function() {
   loadBookSize(210, 297, false);
