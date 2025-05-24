@@ -201,18 +201,26 @@ document.addEventListener("paste", function (event) {
       reader.onload = function (event) {
         const data = event.target.result;
         fabric.Image.fromURL(data, function (img) {
-          const activeObject = canvas.getActiveObject();
+          let targetPanel = null;
+          let originalActiveObject = canvas.getActiveObject(); // Store original active object
 
-          if (activeObject && isActive) {
-            const x =
-              activeObject.left +
-              (activeObject.width * activeObject.scaleX) / 2;
-            const y =
-              activeObject.top +
-              (activeObject.height * activeObject.scaleY) / 2;
+          if (window.clickedPanelBeforePaste && isPanel(window.clickedPanelBeforePaste)) {
+            targetPanel = window.clickedPanelBeforePaste;
+            console.log("Using clickedPanelBeforePaste as target:", targetPanel.name);
+            canvas.setActiveObject(targetPanel); // Temporarily set for findTargetFrame
+          } else if (originalActiveObject && isPanel(originalActiveObject)) {
+            targetPanel = originalActiveObject;
+            console.log("Using current activeObject as target:", targetPanel.name);
+            // No need to set activeObject, it's already the target
+          }
+
+          if (targetPanel && isActive) {
+            const x = targetPanel.left + (targetPanel.width * targetPanel.scaleX) / 2;
+            const y = targetPanel.top + (targetPanel.height * targetPanel.scaleY) / 2;
             putImageInFrame(img, x, y);
           } else {
-            isActive = false;
+            console.log("No suitable panel target found for paste. Placing image at root.");
+            // Fallback: Place image at canvas center or root
             const canvasWidth = canvas.width / 2;
             const canvasHeight = canvas.height / 2;
             const scaleToFitX = canvasWidth / img.width;
@@ -230,6 +238,17 @@ document.addEventListener("paste", function (event) {
             canvas.renderAll();
             saveStateByManual();
           }
+
+          // Restore original active object if it was changed
+          if (window.clickedPanelBeforePaste && originalActiveObject !== window.clickedPanelBeforePaste) {
+             if (originalActiveObject) {
+                canvas.setActiveObject(originalActiveObject);
+             } else {
+                canvas.discardActiveObject();
+             }
+          }
+          window.clickedPanelBeforePaste = null; // Clear after use
+          canvas.renderAll(); // Ensure canvas reflects any active object changes
         });
       };
       reader.readAsDataURL(blob);

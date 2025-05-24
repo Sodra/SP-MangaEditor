@@ -12,6 +12,20 @@ document.addEventListener('DOMContentLoaded', function() {
     false
   );  
 
+  canvas.on('mouse:down', function(options) {
+    if (options.target && isPanel(options.target)) {
+      window.clickedPanelBeforePaste = options.target;
+      console.log("Stored clickedPanelBeforePaste:", window.clickedPanelBeforePaste.name);
+    } else {
+      window.clickedPanelBeforePaste = null;
+      if (options.target) {
+          console.log("Cleared clickedPanelBeforePaste (clicked non-panel object:", options.target.type, ")");
+      } else {
+          console.log("Cleared clickedPanelBeforePaste (empty canvas click)");
+      }
+    }
+  });
+
   $("canvas-container").addEventListener( "drop", async function (e) {
       e.preventDefault();
       var file = e.dataTransfer.files[0];
@@ -141,29 +155,33 @@ function putImageInFrame(imgOrSvg, x, y, isNotActive=false, notReplace=false, is
     console.log("targetFrameIndex", targetFrameIndex);
     if (targetFrameIndex !== -1) {
       var targetFrame = canvas.item(targetFrameIndex);
-      var frameCenterX = targetFrame.left + (targetFrame.width * targetFrame.scaleX) / 2;
-      var frameCenterY = targetFrame.top + (targetFrame.height * targetFrame.scaleY) / 2;
-      var scaleToFitX = (targetFrame.width * targetFrame.scaleX) / obj.width;
-      var scaleToFitY = (targetFrame.height * targetFrame.scaleY) / obj.height;
-      var scaleToFit = Math.max(scaleToFitX, scaleToFitY);
+      
+      // Only proceed if the target frame is a panel
+      if (isPanel(targetFrame)) {
+        var frameCenterX = targetFrame.left + (targetFrame.width * targetFrame.scaleX) / 2;
+        var frameCenterY = targetFrame.top + (targetFrame.height * targetFrame.scaleY) / 2;
+        var scaleToFitX = (targetFrame.width * targetFrame.scaleX) / obj.width;
+        var scaleToFitY = (targetFrame.height * targetFrame.scaleY) / obj.height;
+        var scaleToFit = Math.max(scaleToFitX, scaleToFitY);
 
-      moveSettings(obj, targetFrame);
+        moveSettings(obj, targetFrame);
 
-      if(isFit){
-        obj.set({
-          left: frameCenterX - (obj.width * scaleToFit) / 2,
-          top: frameCenterY - (obj.height * scaleToFit) / 2,
-          scaleX: scaleToFit,
-          scaleY: scaleToFit,
-        });
+        if(isFit){
+          obj.set({
+            left: frameCenterX - (obj.width * scaleToFit) / 2,
+            top: frameCenterY - (obj.height * scaleToFit) / 2,
+            scaleX: scaleToFit,
+            scaleY: scaleToFit,
+          });
+        }
+        if (obj.name) {
+          obj.name = targetFrame.name + "-" + obj.name;
+        } else {
+          obj.name = targetFrame.name + " In Image";
+        }
+
+        setGUID(targetFrame, obj);
       }
-      if (obj.name) {
-        obj.name = targetFrame.name + "-" + obj.name;
-      } else {
-        obj.name = targetFrame.name + " In Image";
-      }
-
-      setGUID(targetFrame, obj);
     } else {
       if(isFit){
         var scaleToCanvasWidth = 300 / obj.width;
@@ -200,8 +218,16 @@ function putImageInFrame(imgOrSvg, x, y, isNotActive=false, notReplace=false, is
 
 
 function findTargetFrame(x, y) {
-  //console.log( "findTargetFrame:x y, ", x, " ", y );
+  // First check if the active object is a panel
+  const activeObject = canvas.getActiveObject();
+  if (isPanel(activeObject)) {
+    const index = canvas.getObjects().indexOf(activeObject);
+    if (index !== -1) {
+      return index;
+    }
+  }
 
+  // If no active panel, fall back to coordinate-based detection
   let objects = canvas.getObjects().reverse();
   for (let i = 0; i < objects.length; i++) {
     if (isShapes(objects[i])) {
