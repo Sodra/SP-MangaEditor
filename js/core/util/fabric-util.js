@@ -905,6 +905,10 @@ function isSpeechBubbleRect(obj){
   return false;
 }
 
+function isSpeechBubblePart(obj) {
+  return isSpeechBubbleSVG(obj) || isSpeechBubbleText(obj) || isSpeechBubbleRect(obj);
+}
+
 function getRectTargetObject(obj){
   const targetObj = obj.targetObject;
   const rect = canvas.getObjects().find(obj => obj.type === 'rect' && obj.targetObject === targetObj);

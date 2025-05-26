@@ -32,6 +32,16 @@ function updateLayerPanel() {
         .map(guid => guidMap.get(guid))
         .filter(child => child !== undefined)
         .sort((a, b) => {
+          const aIsBubblePart = isSpeechBubblePart(a);
+          const bIsBubblePart = isSpeechBubblePart(b);
+
+          if (aIsBubblePart && !bIsBubblePart) {
+            return -1; // a (bubble part) comes before b (non-bubble part)
+          } else if (!aIsBubblePart && bIsBubblePart) {
+            return 1;  // b (bubble part) comes before a (non-bubble part)
+          }
+
+          // If both are bubble parts or neither are, maintain original order
           const indexA = layers.indexOf(a);
           const indexB = layers.indexOf(b);
           return indexA - indexB;
@@ -394,6 +404,10 @@ function enforceLayerOrder() {
       // console.log(`Moving '${fabricObject.name || fabricObject.type}' from canvas index ${currentCanvasIndex} to ${desiredCanvasIndex}`);
       fabricObject.moveTo(desiredCanvasIndex);
       operationsPerformed++;
+      if (isSpeechBubblePart(fabricObject)) {
+        fabricObject.set('dirty', true);
+        fabricObject.set('visible', true); // Ensure it's visible
+      }
     } else if (currentCanvasIndex === -1) {
       // This shouldn't happen if finalLayerOrder is correctly derived from current canvas objects
       // and no objects are removed between updateLayerPanel and this function.

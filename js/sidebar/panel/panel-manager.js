@@ -210,6 +210,18 @@ function putImageInFrame(imgOrSvg, x, y, isNotActive=false, notReplace=false, is
       saveStateByManual();
     }
     enforceLayerOrder(); // Ensure canvas stacking matches layer panel
+
+    // --- BEGIN DIAGNOSTIC TEST ---
+    const speechBubbleTexts = canvas.getObjects().filter(o => o.customType === 'speechBubbleText');
+    if (speechBubbleTexts.length > 0) {
+      console.log(`Diagnostic: Found ${speechBubbleTexts.length} speech bubble text objects. Bringing to front.`);
+      speechBubbleTexts.forEach(textObj => {
+        textObj.bringToFront();
+        textObj.set('dirty', true); // Ensure re-render
+      });
+      canvas.renderAll(); // Re-render after bringing to front
+    }
+    // --- END DIAGNOSTIC TEST ---
     
     return obj;
   }
