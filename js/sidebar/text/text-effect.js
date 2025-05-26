@@ -210,6 +210,39 @@ function createTextbox() {
     cornerStyle: 'circle',
     borderScaleFactor: 2,
     padding: 10,
+    objectCaching: false, // Ensure text reflows instead of scaling cached image
+    strokeUniform: true, // Prevent stroke width from scaling with the object
+  });
+
+  // Custom handler to ensure font size does not scale and handles work correctly
+  textbox.on('scaling', function(e) {
+    const obj = this; // 'this' is the Textbox instance
+
+    // Prevent feedback loop if initDimensions itself causes a scaling event
+    if (obj.isResizing) return;
+    obj.isResizing = true;
+
+    const newWidth = obj.width * obj.scaleX;
+    const newHeight = obj.height * obj.scaleY;
+
+    obj.set({
+      width: newWidth,
+      height: newHeight,
+      scaleX: 1,
+      scaleY: 1
+    });
+
+    // After setting new width/height and resetting scale,
+    // tell the Textbox to re-initialize its internal layout.
+    if (typeof obj.initDimensions === 'function') {
+      obj.initDimensions();
+    }
+    obj.setCoords(); // Recalculate controls position
+
+    if (obj.canvas) {
+      obj.canvas.requestRenderAll();
+    }
+    obj.isResizing = false;
   });
 
   textbox.on('text:changed', function () {
@@ -233,6 +266,10 @@ function createTextbox() {
     markTemplateAsModified();
   }
   // updateLayerPanel();
+  // Ensure the new textbox has an initial width calculation for the scaling handler
+  // This can sometimes help if the Textbox starts with width 0 before text is entered.
+  // However, Textbox usually calculates this itself.
+  // If issues persist, consider: textbox.set('width', textbox.calcTextWidth() + (textbox.padding * 2 || 0));
 }
 
 function toggleShadow() {
