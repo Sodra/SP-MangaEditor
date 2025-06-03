@@ -135,15 +135,14 @@ function resizeCanvasToObject(objectWidth, objectHeight) {
 
 }
 
-var resizableContainer = 0;
+var resizableContainer = null;
 
 document.addEventListener('DOMContentLoaded', function() {
+  resizableContainer = $('canvas-container');
+
   $('bg-color').addEventListener('input', function (event) {
     var color = event.target.value;
     canvas.setBackgroundColor(color, canvas.renderAll.bind(canvas));
-  });
-  $('bg-color').addEventListener('input', function (event) {
-    resizableContainer = $('canvas-container');
   });
 });
 
