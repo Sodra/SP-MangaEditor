@@ -125,6 +125,14 @@ git clone https://github.com/new-sankaku/stable-diffusion-webui-simple-manga-mak
 
 <img src="https://new-sankaku.github.io/SP-MangaEditer-docs/02_.webp" width="700">
 
+## Running Tests
+
+Run the unit tests with:
+
+```bash
+python -m unittest
+```
+
 ## How to Contribute
 - **Bug Reports**: Create a new issue with **[Bug]** in the title
 - **Feature Requests**: Create a new issue with **[Feature Request]** in the title
