@@ -18,23 +18,23 @@ function saveValueMap(element) {
 }
 
 function addNumber(id, label, min, max, value, step=1) {
-  const transLavel = getText(label);
+  const transLabel = getText(label);
   return `
       <div class="pen-input-2group">
-          <label for="${id}" data-i18n="${label}">${transLavel}</label>
+          <label for="${id}" data-i18n="${label}">${transLabel}</label>
           <input type="number" id="${id}" min="${min}" max="${max}" value="${value}" step="${step}">
       </div>
   `;
 }
 
 function addSimpleSubmitButton(id) {
-  const transLavel = getText("submit");
+  const transLabel = getText("submit");
   return `
     <div class="input-group-multi-mini">
       <a style="visibility: hidden;"></a>
       <a style="visibility: hidden;"></a>
-      <button id="${id}"">
-        <span>${transLavel}</span>
+      <button id="${id}">
+        <span>${transLabel}</span>
       </button>
     </div>
   `;
@@ -43,13 +43,13 @@ function addSimpleSubmitButton(id) {
 
 
 function addSubmitButton(id) {
-  const transLavel = getText("submit");
+  const transLabel = getText("submit");
   return `
     <div class="input-group-multi-mini">
       <a style="visibility: hidden;"></a>
       <a style="visibility: hidden;"></a>
       <button id="${id}-submit" onclick="text2Submit('${id}-submit')">
-        <span>${transLavel}</span>
+        <span>${transLabel}</span>
       </button>
     </div>
   `;
@@ -57,19 +57,19 @@ function addSubmitButton(id) {
 
 
 function addColor(id, label, value) {
-  const transLavel = getText(label);
+  const transLabel = getText(label);
   return `
       <div class="pen-input-2group">
-          <label for="${id}" data-i18n="${label}">${transLavel}</label>
+          <label for="${id}" data-i18n="${label}">${transLabel}</label>
           <input id="${id}" value="${value}" class="jscolor-color-picker" data-initial-color="rgba(0,0,0,1)">
       </div>
   `;
 }
 
 function addSlider(id, label, min, max, value, step=1) {
-  const transLavel = getText(label);
+  const transLabel = getText(label);
   return `
-      <div class="input-container-leftSpace" data-label="${transLavel}">
+      <div class="input-container-leftSpace" data-label="${transLabel}">
           <input type="range" id="${id}" min="${min}" max="${max}" value="${value}" step="${step}">
       </div>
   `;
@@ -205,11 +205,11 @@ function addDropDownByGrad(id, label) {
 
 
 function addTextArea(id, label) {
-  const transLavel = getText(label);
-  if( transLavel ){
+  const transLabel = getText(label);
+  if( transLabel ){
     return `
     <div class="input-group_one">
-        <textarea id="${id}" rows="4">${transLavel}</textarea>
+        <textarea id="${id}" rows="4">${transLabel}</textarea>
     </div>
 `;
   }else{
