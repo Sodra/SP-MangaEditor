@@ -8,7 +8,7 @@ function changeSpeechBubble() {
 
 }
 function changeSpeechBubbleSVG(bubbleStrokewidht, fillColor, strokeColor, opacity){
-    opacity = opacity / 100;  
+    opacity = opacity / 100;
     var fillColorRgba   = hexToRgba(fillColor,opacity);
     var strokeColorRgba = hexToRgba(strokeColor,1.0);
 
@@ -16,6 +16,7 @@ function changeSpeechBubbleSVG(bubbleStrokewidht, fillColor, strokeColor, opacit
 
     var activeObject = canvas.getActiveObject();
     if (activeObject) {
+        changeDoNotSaveHistory();
 
             let isExistsFillArea = false;
             if(isPath(activeObject)){
@@ -44,6 +45,8 @@ function changeSpeechBubbleSVG(bubbleStrokewidht, fillColor, strokeColor, opacit
                 });    
             }
         canvas.requestRenderAll();
+        changeDoSaveHistory();
+        saveStateByManual();
     }
 }
 
@@ -117,7 +120,17 @@ function getSpeechBubbleTextFill(activeObject, type){
 }
 
 function loadSpeechBubbleSVGReadOnly(svgString, name) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgString, "image/svg+xml");
+    const idList = Array.from(doc.querySelectorAll("path,polygon")).map(el => el.getAttribute("id"));
+
     fabric.loadSVGFromString(svgString, function (objects, options) {
+        objects.forEach((obj, idx) => {
+            if (idList[idx]) {
+                if (!obj.data) obj.data = {};
+                obj.data.originalId = idList[idx];
+            }
+        });
         
         const svgObject = fabric.util.groupSVGElements(objects, options);
 
