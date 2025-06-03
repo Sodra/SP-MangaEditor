@@ -8,7 +8,8 @@ function changeSpeechBubble() {
 
 }
 function changeSpeechBubbleSVG(bubbleStrokewidht, fillColor, strokeColor, opacity){
-    opacity = opacity / 100;
+    changeDoNotSaveHistory();
+    opacity = opacity / 100;  
     var fillColorRgba   = hexToRgba(fillColor,opacity);
     var strokeColorRgba = hexToRgba(strokeColor,1.0);
 
