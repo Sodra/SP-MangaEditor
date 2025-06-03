@@ -8,6 +8,7 @@ function changeSpeechBubble() {
 
 }
 function changeSpeechBubbleSVG(bubbleStrokewidht, fillColor, strokeColor, opacity){
+    changeDoNotSaveHistory();
     opacity = opacity / 100;  
     var fillColorRgba   = hexToRgba(fillColor,opacity);
     var strokeColorRgba = hexToRgba(strokeColor,1.0);
@@ -44,6 +45,8 @@ function changeSpeechBubbleSVG(bubbleStrokewidht, fillColor, strokeColor, opacit
                 });    
             }
         canvas.requestRenderAll();
+        changeDoSaveHistory();
+        saveStateByManual();
     }
 }
 
