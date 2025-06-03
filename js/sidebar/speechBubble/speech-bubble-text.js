@@ -142,6 +142,7 @@ function updateShapeMetrics(svgObj) {
 
 function createSpeechBubbleMetrics(svgObj, svgData) {
   // console.log("createSpeechBubbleMetrics call");
+  changeDoNotSaveHistory();
 
   let grid, scale, viewBox, largestRect;
   ({ grid, scale, viewBox } = createGrid(svgData));
@@ -289,15 +290,14 @@ function createSpeechBubbleMetrics(svgObj, svgData) {
   svgObj.lastLeft = svgObj.left;
   svgObj.lastTop = svgObj.top;
 
-  changeDoNotSaveHistory();
-    // canvas.sendToBack(svgObj);
-    canvas.add(newRect);
-  changeDoSaveHistory();
-
+  // canvas.sendToBack(svgObj);
+  canvas.add(newRect);
   canvas.add(newTextbox);
-  
+
   // canvas.bringToFront(newTextbox);
   canvas.renderAll();
+  changeDoSaveHistory();
+  saveStateByManual();
 }
 
 function updateObjectPositions(svgObject, immediate = false) {
