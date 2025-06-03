@@ -309,6 +309,10 @@ function loadSVGPlusReset(svgString, isLand=false) {
     var offsetHorizontal_Y = (svgPagging / 2) + ((canvasUsableHeight - options.height * overallScaleY) / 2) + strokeWidth;
     var offsetVertical_X = (svgPagging / 2) + ((canvasUsableWidth  - options.width  * overallScaleX) / 2);
     var offsetHorizontal_X = (svgPagging / 1.5) + ((canvasUsableWidth  - options.width  * overallScaleX) / 2);
+
+    // Determine offsets based on orientation
+    var offsetX = isLand ? offsetHorizontal_X : offsetVertical_X;
+    var offsetY = isLand ? offsetHorizontal_Y : offsetVertical_Y;
     var bgColorInput = $("bg-color");
     canvas.backgroundColor = bgColorInput.value;
 
