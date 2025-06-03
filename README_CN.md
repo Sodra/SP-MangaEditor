@@ -12,12 +12,12 @@
 
 所有功能都可以通过演示网站使用。
 
-[网站：Desu!](https://new-sankaku.github.io/SP-MangaEditer/)
+[网站：Desu!](https://new-sankaku.github.io/SP-MangaEditor/)
 
 如果您更喜欢本地下载文件而不是使用扩展程序（更快的方法）：
 
-git clone https://github.com/new-sankaku/SP-MangaEditer.git
-cd SP-MangaEditer
+git clone https://github.com/new-sankaku/SP-MangaEditor.git
+cd SP-MangaEditor
 start index.html
 
 该应用程序支持多种功能，包括图像拖放、文件选择导入、文字生成图像功能和图像转换功能。它为初学者提供预设的面板布局，便于创建漫画，同时还配备专业的切割工具，可以自定义面板切割。功能不断发展，建议定期更新。
@@ -25,7 +25,7 @@ start index.html
 ## 界面预览
 
 ### 主页面
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/01_mainpage.webp" width="700">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/01_mainpage.webp" width="700">
 
 ### Image Drop
 https://github.com/user-attachments/assets/7cf94e6c-fc39-4aed-a0a1-37ca70260fe4
@@ -34,44 +34,44 @@ https://github.com/user-attachments/assets/7cf94e6c-fc39-4aed-a0a1-37ca70260fe4
 https://github.com/user-attachments/assets/6f1dae5f-b50f-4b04-8875-f0b07111f2ab
 
 ### 图像提示助手
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/03_prompthelper.webp" width="700">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/03_prompthelper.webp" width="700">
 
 ### 语言支持
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/02_trans.webp" height="400">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/02_trans.webp" height="400">
 
 ### 网格线/切割模式
 <div style="display: flex; align-items: flex-start;">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/05_gridline.webp" height="350">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/06_knifemode.webp" height="350">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/05_gridline.webp" height="350">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/06_knifemode.webp" height="350">
 </div>
 
 ### 暗色模式/亮色模式
 <div style="display: flex; align-items: flex-start;">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/09_darkmode.webp" height="350">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/09_lightmode.webp" height="350">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/09_darkmode.webp" height="350">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/09_lightmode.webp" height="350">
 </div>
 
 ### 混合模式和示例
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/11_blendmode.webp" height="800">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/11_blendmode.webp" height="800">
 
 <div style="display: flex; align-items: flex-start;">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/12_blend.webp" height="350">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/13_blend.webp" height="350">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/12_blend.webp" height="350">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/13_blend.webp" height="350">
 </div>
 
 ### 拖放功能
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/14_Drag on drop.webp" width="700">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/14_Drag on drop.webp" width="700">
 
 ### 特效
 <div style="display: flex; align-items: flex-start;">
-    <img src="https://new-sankaku.github.io/SP-MangaEditer-docs/04_gpix01.webp" width="400">
-    <img src="https://new-sankaku.github.io/SP-MangaEditer-docs/04_gpix02.webp" width="400">
+    <img src="https://new-sankaku.github.io/SP-MangaEditor-docs/04_gpix01.webp" width="400">
+    <img src="https://new-sankaku.github.io/SP-MangaEditor-docs/04_gpix02.webp" width="400">
 </div>
 
 ### 文字、对话气泡、笔工具
 <div style="display: flex; align-items: flex-start;">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/08_speechbubble.webp" width="400">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/07_font.webp" width="400">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/08_speechbubble.webp" width="400">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/07_font.webp" width="400">
 </div>
 
 ## 功能特点
@@ -118,7 +118,7 @@ https://github.com/user-attachments/assets/6f1dae5f-b50f-4b04-8875-f0b07111f2ab
 
 git clone https://github.com/new-sankaku/stable-diffusion-webui-simple-manga-maker.git
 
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/02_.webp" width="700">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/02_.webp" width="700">
 
 ## 如何贡献
 - **错误报告**: 创建新问题时在标题中加入 **[Bug]**

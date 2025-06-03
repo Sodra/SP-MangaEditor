@@ -17,12 +17,12 @@ You can either use the demo site or add it as an extension to WebUI. It runs in 
 
 All features are available through the demo site alone.
 
-[Web Site: Desu!](https://new-sankaku.github.io/SP-MangaEditer/)
+[Web Site: Desu!](https://new-sankaku.github.io/SP-MangaEditor/)
 
 If you prefer to download files locally instead of using the extension (faster method):
 
-git clone https://github.com/new-sankaku/SP-MangaEditer.git
-cd SP-MangaEditer
+git clone https://github.com/new-sankaku/SP-MangaEditor.git
+cd SP-MangaEditor
 start index.html
 
 The application supports various features including image drag-and-drop, file selection import, Text2Image functionality, and Image2Image capabilities. It comes with pre-built panel layouts for beginners to easily create manga, as well as a professional knife tool for custom panel cutting. The features continue to evolve, and regular updates are recommended.
@@ -30,7 +30,7 @@ The application supports various features including image drag-and-drop, file se
 ## Interface Previews
 
 ### Main Page
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/01_mainpage.webp" width="700">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/01_mainpage.webp" width="700">
 
 ### Image Drop
 https://github.com/user-attachments/assets/7cf94e6c-fc39-4aed-a0a1-37ca70260fe4
@@ -39,44 +39,44 @@ https://github.com/user-attachments/assets/7cf94e6c-fc39-4aed-a0a1-37ca70260fe4
 https://github.com/user-attachments/assets/6f1dae5f-b50f-4b04-8875-f0b07111f2ab
 
 ### Image Prompt Helper
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/03_prompthelper.webp" width="700">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/03_prompthelper.webp" width="700">
 
 ### Language Support
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/02_trans.webp" height="400">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/02_trans.webp" height="400">
 
 ### Grid Line / Knife Mode
 <div style="display: flex; align-items: flex-start;">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/05_gridline.webp" height="350">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/06_knifemode.webp" height="350">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/05_gridline.webp" height="350">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/06_knifemode.webp" height="350">
 </div>
 
 ### Dark Mode / Light Mode
 <div style="display: flex; align-items: flex-start;">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/09_darkmode.webp" height="350">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/09_lightmode.webp" height="350">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/09_darkmode.webp" height="350">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/09_lightmode.webp" height="350">
 </div>
 
 ### Blend Mode and Samples
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/11_blendmode.webp" height="800">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/11_blendmode.webp" height="800">
 
 <div style="display: flex; align-items: flex-start;">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/12_blend.webp" height="350">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/13_blend.webp" height="350">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/12_blend.webp" height="350">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/13_blend.webp" height="350">
 </div>
 
 ### Drag and Drop
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/14_Drag on drop.webp" width="700">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/14_Drag on drop.webp" width="700">
 
 ### Effects
 <div style="display: flex; align-items: flex-start;">
-    <img src="https://new-sankaku.github.io/SP-MangaEditer-docs/04_gpix01.webp" width="400">
-    <img src="https://new-sankaku.github.io/SP-MangaEditer-docs/04_gpix02.webp" width="400">
+    <img src="https://new-sankaku.github.io/SP-MangaEditor-docs/04_gpix01.webp" width="400">
+    <img src="https://new-sankaku.github.io/SP-MangaEditor-docs/04_gpix02.webp" width="400">
 </div>
 
 ### Text, Speech Bubbles, Pen
 <div style="display: flex; align-items: flex-start;">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/08_speechbubble.webp" width="400">
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/07_font.webp" width="400">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/08_speechbubble.webp" width="400">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/07_font.webp" width="400">
 </div>
 
 ## Features
@@ -123,7 +123,7 @@ https://github.com/user-attachments/assets/6f1dae5f-b50f-4b04-8875-f0b07111f2ab
 
 git clone https://github.com/new-sankaku/stable-diffusion-webui-simple-manga-maker.git
 
-<img src="https://new-sankaku.github.io/SP-MangaEditer-docs/02_.webp" width="700">
+<img src="https://new-sankaku.github.io/SP-MangaEditor-docs/02_.webp" width="700">
 
 ## How to Contribute
 - **Bug Reports**: Create a new issue with **[Bug]** in the title
