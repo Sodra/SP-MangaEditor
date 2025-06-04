@@ -1,9 +1,8 @@
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Sodra/SP-MangaEditor)
 [English](https://github.com/new-sankaku/stable-diffusion-webui-simple-manga-maker) | [日本語](https://github.com/new-sankaku/stable-diffusion-webui-simple-manga-maker/blob/main/README_JP.md) | [中文](https://github.com/new-sankaku/stable-diffusion-webui-simple-manga-maker/blob/main/README_CN.md)
 
-# Sodra's attempt to un-jankify Manga Editor Desu.
-The original repo has alot of confusing and downright janky ways of doing things, so this fork exists to clean things up.
-3/25/24 - Fixed SD generation, settings on startup, and undo history.
+# Sodra's attempt to fix Manga Editor Desu.
+This fork exists to clean things up, and make the UX cleaner and quicker.
 
 # Manga Editor Desu! Pro Edition
 A web application for manga creation that connects with WebUI, Forge, and ComfyUI.
