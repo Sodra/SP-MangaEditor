@@ -212,6 +212,10 @@ function setGUID(personObject, childObject) {
   guid = getGUID(childObject);
   // console.log(personObject.name + " : setGUID", guid);
   personObject.guids.push(guid);
+  if (personObject.guids.length > 0) {
+    personObject.selectable = false;
+    personObject.evented = false;
+  }
 }
 
 function removeGUID(personObject, childObject) {
@@ -231,6 +235,10 @@ function removeGUID(personObject, childObject) {
   
   if (index !== -1) {
     personObject.guids.splice(index, 1);
+  }
+  if (personObject.guids.length === 0) {
+    personObject.selectable = true;
+    personObject.evented = true;
   }
   updateLayerPanel();
 }
