@@ -257,7 +257,8 @@ function addSquareBySize(width, height) {
   setPanelValue(square);
   canvas.add(square);
 
-  square.selectable = false;
+  square.selectable = true;
+  square.evented = true;
   updateLayerPanel();
 }
 
